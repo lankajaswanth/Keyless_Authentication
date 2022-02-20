@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
 from facedetector import faceencodingvalues
+from flask_recaptcha import ReCaptcha
 import db
 import os
 
@@ -11,6 +12,22 @@ mail= Mail(app)
 UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.getenv('SECRET_KEY')
+
+recaptcha = ReCaptcha(app=app)
+
+app.config.update(dict(
+    RECAPTCHA_ENABLED = True,
+    RECAPTCHA_SITE_KEY = os.getenv('RECAPTCHA_SITE_KEY'),
+    RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY'),
+	RECAPTCHA_SIZE = 'invisible',
+	RECAPTCHA_THEME = "dark",
+))
+
+# RECAPTCHA_DATA_ATTRS = {'bind': 'recaptcha-submit', 'callback': 'onSubmitCallback', 'size': 'invisible'}
+
+recaptcha = ReCaptcha()
+recaptcha.init_app(app)
+
 
 dbconnect = db.connect()
 
@@ -63,10 +80,9 @@ def home():
 def login():
 	if request.method == "GET":
 		if "user" in session:return redirect(url_for("home"))
-		return render_template("login.html")
+		return render_template("login.html",RECAPTCHA_SITE_KEY = os.getenv('RECAPTCHA_SITE_KEY'))
 	if request.method == "POST":
 		email = request.form.to_dict()["email"]
-
 		q = "select * from tempusers where email = '{}'".format(email)
 		result = db.select(q)
 		if len(result) == 0:
