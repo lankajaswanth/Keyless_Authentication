@@ -198,22 +198,32 @@ def admin():
 
 cap = cv2.VideoCapture(0)
 # =============================for attendence recording============================================================================================
+# def gen_frames(email):
+# 	global recorded,cap
+# 	cap = cv2.VideoCapture(0)
+# 	while True:
+# 		print("================yeilding frame=====================================================================")
+# 		sucess,img = cap.read()
+# 		cv2.imshow('Video window', img)
+# 		frame,recorded = detect(img,email)
+# 		if recorded == "YES":
+# 			session["verify"] = "True"
+# 			print(recorded)
+# 			break
 def gen_frames(email):
 	global recorded,cap
-	cap = cv2.VideoCapture(0)
+	# predata(regnosofstudent)
 	while True:
 		sucess,img = cap.read()
 		(frame,ans) = detect(img,email)
 		recorded = ans
 		if recorded == "YES":
+			print("verified*******************************************************************************************************************************")
 			break
-
 		yield(b'--frame\r\n'
 					b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 	print("yield condition exit")
 	cap.release()
-
-
 
 @app.route("/video_feed")
 def video_feed():
@@ -221,6 +231,29 @@ def video_feed():
 	return Response(gen_frames(session["user"]),
 					mimetype='multipart/x-mixed-replace; boundary=frame')
 
+# ============================================================================================================
+
+@app.route('/recorde')
+def recorde():
+	global recorded
+	if recorded == "YES":
+		return jsonify("YES")
+	else:return jsonify("NO")
+
+@app.route('/recorddone', methods = ['POST', 'GET'])
+def recorddone():
+	global recorded
+	cap.release()
+	recorded = "NO"
+	if request.method == 'GET':
+		# return session["verify"]
+		session["verify"] = "True"
+		print("session verify========================================================")
+		if "verify" in session:
+			print("yes")
+		else:
+			print("no")
+		return redirect(url_for("home"))
 
 
 # ============================================================================================================

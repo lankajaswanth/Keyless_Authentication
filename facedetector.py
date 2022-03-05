@@ -55,40 +55,16 @@ def detect(img,email):
 		matches = face_recognition.compare_faces(knownencodings,encodeFace)
 		faceDis = face_recognition.face_distance(knownencodings,encodeFace)
 		matchindex = np.argmin(faceDis)
-		print("=======matchindex========================================")
+		# print("=======matchindex========================================")
 		print(matchindex)
 		print(count)
-
-
-
-
-	# print("===============start=====================================================")
-	# imgload = face_recognition.load_image_file(img)
-	# imgload = cv2.cvtColor(imgload,cv2.COLOR_BGR2RGB)
-	# try:
-	# 	faceloc = face_recognition.face_locations(imgload)[0]  # (260, 825, 528, 557)
-	# except:
-	# 	return (img, "NO")
-	# encodeimg = face_recognition.face_encodings(imgload)[0]
-	# print("===============faceloc=====================================================")
-	# # print(faceloc)
-	# print("==================encodeimg==================================================")
-	# # print(encodeimg)
-	# global knownencodings,count,sub
-	# distances = face_recognition.face_distance(knownencodings,encodeimg)
-	# print("===============distances=====================================================")
-	# # print(distances)
-	# if len(distances) == 0:
-	# 	return (img, "NO")
-	# else:
-	# 	distances = np.array(distances)
-	# 	min_value = np.min(distances)
-	# 	index = np.argmin(distances)
-	# 	# print(index)
-	# 	if min_value < 0.6:
-	# 		if email == emaillist[index]:
-	# 			return (img, "YES")
-	# 		else:
-	# 			return (img, "NO")
-	# 	else:
-	# 		return (img, "NO")
+		print(matches[matchindex])
+		print(faceDis[matchindex])
+		if matches[matchindex] and count == matchindex and faceDis[matchindex]<0.6:
+			print("================detect=================================================================")
+			ret,buffer = cv2.imencode('.jpg',img)
+			frame = buffer.tobytes()
+			return (frame,"YES")
+	ret,buffer = cv2.imencode('.jpg',img)
+	frame = buffer.tobytes()
+	return (frame,"NO")

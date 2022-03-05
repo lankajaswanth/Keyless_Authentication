@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 
-<body>
+<body style="background: pink;">
     <nav class="navbar navbar-expand-lg navbar-light bg-secondary navbar-inverse">
         <a class="navbar-brand" href="#">Face verification</a>
         <div class="container-fluid">
@@ -28,19 +28,21 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            refresh();
+            refres();
         });
 
-        function refresh() {
+        function refres() {
             setTimeout(function () {
-                $.getJSON('/recorded', function (data) {
+                $.getJSON('/recorde', function (data) {
+                    console.log(data);
+                    document.querySelector("#demo").innerHTML = data;
                     if (data == "YES") {
-                        window.location.href = "http://127.0.0.1:7890/recorddone";
+                        window.location.href = "http://127.0.0.1:8000/recorddone";
                     }
                     $('#test').text(data);
                 });
-                refresh();
-            }, 1000);
+                refres();
+            }, 5000);
         }
     </script>
 
@@ -61,14 +63,6 @@
 
         camrequest();
     </script>
-
-
-
-
-
-
-
-
 </body>
 
 </html>
