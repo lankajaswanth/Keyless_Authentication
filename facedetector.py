@@ -22,9 +22,9 @@ def faceencodingvalues(img):
 		return [],[]
 	encodeimg = face_recognition.face_encodings(imgload)[0]
 	print("===============faceloc=====================================================")
-	# print(faceloc)
+	print(faceloc)
 	print("==================encodeimg==================================================")
-	# print(encodeimg)
+	print(encodeimg)
 
 	return (encodeimg,faceloc)
 
