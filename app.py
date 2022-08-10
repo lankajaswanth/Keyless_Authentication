@@ -174,11 +174,12 @@ def admin():
 
 # ============================================================================================================
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture()
 
 
 def gen_frames(email):
 	global recorded,cap
+	cap.open(0, cv2.CAP_DSHOW)
 	# predata(regnosofstudent)
 	while True:
 		sucess,img = cap.read()
@@ -191,6 +192,7 @@ def gen_frames(email):
 					b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 	print("yield condition exit")
 	cap.release()
+	cv2.destroyAllWindows()
 
 @app.route("/video_feed")
 def video_feed():
